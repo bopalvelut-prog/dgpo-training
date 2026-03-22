@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Models (too large for GitHub)
+*.gguf
+*.bin
+*.safetensors
+models/
+
+# Training outputs
+dgpo-qwen2.5-*/
+output/
+wandb/
+*.log
+
+# HuggingFace cache
+.cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# llama.cpp build
+llama.cpp/build/
+llama.cpp/.cache/

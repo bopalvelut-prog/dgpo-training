@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  dgpo-training:
+    build: .
+    volumes:
+      - ./output:/app/dgpo-qwen2.5-1.5b
+      - ./hf-cache:/root/.cache/huggingface
+    environment:
+      - WANDB_PROJECT=dgpo-qwen2.5-1.5b
+      - CUDA_VISIBLE_DEVICES=0
+    # Uncomment for GPU:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
