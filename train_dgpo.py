@@ -32,38 +32,57 @@ warnings.filterwarnings("ignore")
 
 @dataclass
 class DGPOConfig:
-    teacher_model: str = field(default="Qwen/Qwen2.5-7B-Instruct")
-    student_model: str = field(default="Qwen/Qwen2.5-1.5B-Instruct")
-    output_dir: str = field(default="./dgpo-qwen2.5-1.5b")
+    teacher_model: str = field(default="Qwen/Qwen2.5-72B-Instruct")
+    student_model: str = field(default="Qwen/Qwen2.5-7B-Instruct")
+    output_dir: str = field(default="./dgpo-qwen2.5-7b")
+    model_size: str = field(default="7b")  # 1.5b, 3b, 7b, 14b, 32b, 72b
 
     # KD phase
-    kd_epochs: int = field(default=5)
-    kd_batch_size: int = field(default=64)
-    kd_learning_rate: float = field(default=2e-5)
-    kd_max_length: int = field(default=2048)
+    kd_epochs: int = field(default=10)
+    kd_batch_size: int = field(default=32)
+    kd_learning_rate: float = field(default=1e-5)
+    kd_max_length: int = field(default=4096)
+    kd_gradient_accumulation_steps: int = field(default=4)
 
     # RL phase
-    rl_steps: int = field(default=1000)
-    rl_batch_size: int = field(default=512)
-    kl_coef: float = field(default=0.001)
-    actor_lr: float = field(default=1e-6)
-    critic_lr: float = field(default=1e-5)
-    max_prompt_length: int = field(default=4096)
-    max_response_length: int = field(default=500)
-    max_conversation_turns: int = field(default=4)
+    rl_steps: int = field(default=5000)
+    rl_batch_size: int = field(default=256)
+    kl_coef: float = field(default=0.005)
+    actor_lr: float = field(default=5e-7)
+    critic_lr: float = field(default=5e-6)
+    max_prompt_length: int = field(default=8192)
+    max_response_length: int = field(default=1024)
+    max_conversation_turns: int = field(default=8)
 
     # Retrieval
-    top_k_docs: int = field(default=3)
+    top_k_docs: int = field(default=5)
 
     # LoRA
-    use_lora: bool = field(default=True)
-    lora_r: int = field(default=16)
-    lora_alpha: int = field(default=32)
+    use_lora: bool = field(default=False)
+    lora_r: int = field(default=64)
+    lora_alpha: int = field(default=128)
     lora_dropout: float = field(default=0.05)
 
+    # DeepSpeed
+    deepspeed_config: str = field(default="ds_config.json")
+    use_deepspeed: bool = field(default=True)
+
+    # Flash Attention
+    use_flash_attention: bool = field(default=True)
+
+    # Multi-GPU
+    num_gpus: int = field(default=8)
+    tensor_parallel: int = field(default=1)
+    pipeline_parallel: int = field(default=1)
+
     # Datasets
-    train_datasets: str = field(default="nq,triviaqa,popqa,hotpotqa")
-    wandb_project: str = field(default="dgpo")
+    train_datasets: str = field(default="nq,triviaqa,popqa,hotpotqa,squad2,web_questions,natural_questions,ms_marco")
+    max_train_samples: int = field(default=100000)
+    wandb_project: str = field(default="dgpo-large")
+
+    # Evaluation
+    eval_steps: int = field(default=100)
+    eval_datasets: str = field(default="nq_test,triviaqa_test,hotpotqa_test")
 
 
 # ==================== Prompt Template ====================

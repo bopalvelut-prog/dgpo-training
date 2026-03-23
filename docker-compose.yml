@@ -1,19 +1,87 @@
 version: '3.8'
 
 services:
-  dgpo-training:
+  dgpo-1.5b:
     build: .
     volumes:
-      - ./output:/app/dgpo-qwen2.5-1.5b
+      - ./output:/app/output
       - ./hf-cache:/root/.cache/huggingface
     environment:
-      - WANDB_PROJECT=dgpo-qwen2.5-1.5b
+      - WANDB_PROJECT=dgpo-1.5b
       - CUDA_VISIBLE_DEVICES=0
-    # Uncomment for GPU:
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: 1
-    #           capabilities: [gpu]
+    command: bash train_all_sizes.sh 1.5b
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  dgpo-7b:
+    build: .
+    volumes:
+      - ./output:/app/output
+      - ./hf-cache:/root/.cache/huggingface
+    environment:
+      - WANDB_PROJECT=dgpo-7b
+      - CUDA_VISIBLE_DEVICES=0,1,2,3
+    command: bash train_all_sizes.sh 7b
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 4
+              capabilities: [gpu]
+
+  dgpo-14b:
+    build: .
+    volumes:
+      - ./output:/app/output
+      - ./hf-cache:/root/.cache/huggingface
+    environment:
+      - WANDB_PROJECT=dgpo-14b
+      - CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+    command: bash train_all_sizes.sh 14b
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 8
+              capabilities: [gpu]
+
+  dgpo-32b:
+    build: .
+    volumes:
+      - ./output:/app/output
+      - ./hf-cache:/root/.cache/huggingface
+    environment:
+      - WANDB_PROJECT=dgpo-32b
+      - CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+    command: bash train_all_sizes.sh 32b
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 8
+              capabilities: [gpu]
+
+  dgpo-72b:
+    build: .
+    volumes:
+      - ./output:/app/output
+      - ./hf-cache:/root/.cache/huggingface
+    environment:
+      - WANDB_PROJECT=dgpo-72b
+      - CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    command: bash train_all_sizes.sh 72b
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 16
+              capabilities: [gpu]
